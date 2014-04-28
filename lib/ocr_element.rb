@@ -5,7 +5,7 @@ class OCRElement < HOCRBox
     
     include Enumerable
     
-    attr_reader :ocr_class, :children
+    attr_reader :ocr_class, :children, :confidence
     attr_accessor :features
     
     class << self
@@ -16,6 +16,7 @@ class OCRElement < HOCRBox
         def create(ocr_element_html)
             ocr_class   = extract_ocr_class(ocr_element_html)
             coordinates = extract_coordinates(ocr_element_html)
+            confidence  = extract_confidence(ocr_element_html)
 
             unless ocr_class == 'ocrx_word'
                children = extract_children(ocr_element_html)
@@ -25,15 +26,15 @@ class OCRElement < HOCRBox
 
             case ocr_class
             when 'ocrx_block' then
-               OCRBlock.new(ocr_class,children,coordinates)
+               OCRBlock.new(ocr_class,children,coordinates,confidence)
             when 'ocr_par' then
-               OCRParagraph.new(ocr_class,children,coordinates)
+               OCRParagraph.new(ocr_class,children,coordinates,confidence)
             when 'ocr_line' then
-               OCRLine.new(ocr_class,children,coordinates)
+               OCRLine.new(ocr_class,children,coordinates,confidence)
             when 'ocrx_word' then
-               OCRWord.new(ocr_class,children,coordinates)
+               OCRWord.new(ocr_class,children,coordinates,confidence)
             else
-               OCRElement.new(ocr_class,children,coordinates)
+               OCRElement.new(ocr_class,children,coordinates,confidence)
             end
         end
 
@@ -49,10 +50,19 @@ class OCRElement < HOCRBox
                #br Elemente ausfiltern
                children.reject { |child| child.ocr_class == nil}
         end
+
+        def extract_confidence(ocr_element_html)
+            extract_confidence_from_string ocr_element_html['title']
+        end
    
 
         def extract_coordinates(ocr_element_html)
            extract_coordinates_from_string ocr_element_html['title']
+        end
+
+        def extract_confidence_from_string(s)
+            s =~ /x\_wconf (\d+)/
+            $1 ? $1.to_i : nil
         end
 
         def extract_coordinates_from_string(s)
@@ -65,9 +75,10 @@ class OCRElement < HOCRBox
         end
     end
     
-    def initialize(ocr_class, children, coordinates)
+    def initialize(ocr_class, children, coordinates, confidence=nil)
         @children = children
         @ocr_class = ocr_class
+        @confidence = confidence
         @features = []
         super coordinates
     end

@@ -32,6 +32,11 @@ describe OCRPage do
         @test_page.image.should == "test_path"
         @test_page.image = old_image
     end
+
+    it 'can access confidence levels' do
+        page = OCRPage.new('data/confidence.html')
+        page.words.first.confidence.should == 93;
+    end
   end
   
   describe 'Page' do

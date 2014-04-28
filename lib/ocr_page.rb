@@ -52,7 +52,12 @@ class OCRPage < OCRElement
         end
     end
     
-    
+    def words
+        words = []
+        each_word {|w| words << w }
+        words
+    end
+
     def extract_bbox_ppageno( ocr_html_text_fragment )
         bbox, ppageno = ocr_html_text_fragment.split(';')
         ppageno =~ /(\d+)/

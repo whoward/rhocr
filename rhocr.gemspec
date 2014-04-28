@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.description = "Manipulate and use OCR data encoded in hOCR-Format see: http://code.google.com/p/hocr-tools/"
 
   s.files = Dir.glob("lib/**/*.rb")
-  s.text_files = Dir.glob("test/**/*.rb")
+  s.test_files = Dir.glob("test/**/*.rb")
   
   s.add_dependency "nokogiri"
 end

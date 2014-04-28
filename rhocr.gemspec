@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
 
   s.authors = ["Andreas Neumann", "William Howard"]
   s.email = ["andreas@neumann.biz", "whoward.tke@gmail.com"]
-  s.url = "http://github.com/daandi/rhocr"
+  s.homepage = "http://github.com/daandi/rhocr"
 
   s.description = "Manipulate and use OCR data encoded in hOCR-Format see: http://code.google.com/p/hocr-tools/"
 
